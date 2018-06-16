@@ -1,0 +1,6 @@
+E:\C#project\EVN_code\EVN_RecloserPlacementOptimization\EVN_test1\EVN_test1\obj\Debug\EVN_test1.csprojResolveAssemblyReference.cache
+E:\C#project\EVN_code\EVN_RecloserPlacementOptimization\EVN_test1\EVN_test1\obj\Debug\EVN_test1.csproj.CoreCompileInputs.cache
+E:\C#project\EVN_code\EVN_RecloserPlacementOptimization\EVN_test1\EVN_test1\bin\Debug\EVN_test1.exe
+E:\C#project\EVN_code\EVN_RecloserPlacementOptimization\EVN_test1\EVN_test1\bin\Debug\EVN_test1.pdb
+E:\C#project\EVN_code\EVN_RecloserPlacementOptimization\EVN_test1\EVN_test1\obj\Debug\EVN_test1.exe
+E:\C#project\EVN_code\EVN_RecloserPlacementOptimization\EVN_test1\EVN_test1\obj\Debug\EVN_test1.pdb
