@@ -41,6 +41,8 @@
   <ItemGroup>
     <Compile Include="chuyenDoiDoDai.cs" />
     <Compile Include="ChuyenDoiDuLieu.cs" />
+    <Compile Include="LoCap.cs" />
+    <Compile Include="LoCapDien.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SearchPosition.cs" />
