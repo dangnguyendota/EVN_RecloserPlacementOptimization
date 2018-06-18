@@ -1,0 +1,132 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace EVN_test1
+{
+    class ChiPhi
+    {
+        private int numMC = 0;
+        private int numDTD = 0;
+        private int numDB = 0;
+        private double F = 0.0;
+        private List<double[]> vi_triMC ;
+        private List<double[]> vi_triDTD ;
+        private List<double[]> vi_triDB ;
+        public ChiPhi(int numMC, int numDTD, int numDB, double F, List<double[]> vi_triMC, List<double[]> vi_triDTD, List<double[]> vi_triDB)
+        {
+            this.numMC = numMC;
+            this.numDTD = numDTD;
+            this.numDB = numDB;
+            this.F = F;
+            this.vi_triMC = vi_triMC;
+            this.vi_triDTD = vi_triDTD;
+            this.vi_triDB = vi_triDB;
+        }
+        public double getF()
+        {
+            return this.F;
+        }
+        public int[] getSL()
+        {
+            return new int[3] { numMC, numDTD, numDB }; 
+        }
+        public int getSL_MC()
+        {
+            return this.numMC;
+        }
+        public int getSL_DTD()
+        {
+            return this.numDTD;
+        }
+        public int getSL_DB()
+        {
+            return this.numDB;
+        }
+        //public void setMC_positions(List<double[]> vitri)
+        //{
+        //    vi_triMC = vitri;
+        //}
+        //public void setDTD_position(List<double[]> vitri)
+        //{
+        //    vi_triDTD = vitri;
+        //}
+        //public void setDB_postion(List<double[]> vitri)
+        //{
+        //    vi_triDB = vitri;
+        //}
+        public List<double[]> getMC_position()
+        {
+            return this.vi_triMC;
+        }
+        public List<double[]> getDTD_position()
+        {
+            return this.vi_triDTD;
+        }
+        public List<double[]> getDB_position()
+        {
+            return this.vi_triDB;
+        }
+
+    }
+    public class TieuHao
+    {
+        private List<ChiPhi> chi_phi = new List<ChiPhi>();
+        public void Add(int numMC, int numDTD, int numDB, double F, List<double[]> vi_triMC, List<double[]> vi_triDTD, List<double[]> vi_triDB)
+        {
+            foreach(ChiPhi i in chi_phi)
+            {
+                if(i.getSL_MC() == numMC && i.getSL_DTD() == numDTD && i.getSL_DB() == numDB)
+                {
+                    return;
+                }
+            }
+            chi_phi.Add(new ChiPhi(numMC, numDTD, numDB, F, vi_triMC, vi_triDTD, vi_triDB));
+        }
+        public double getF(int numMC, int numDTD, int numDB)
+        {
+            foreach (ChiPhi i in chi_phi)
+            {
+                if (i.getSL_MC() == numMC && i.getSL_DTD() == numDTD && i.getSL_DB() == numDB)
+                {
+                    return i.getF();
+                }
+            }
+            return 0.0;
+        }
+        public List<double[]> getMC_position(int numMC, int numDTD, int numDB)
+        {
+            foreach (ChiPhi i in chi_phi)
+            {
+                if (i.getSL_MC() == numMC && i.getSL_DTD() == numDTD && i.getSL_DB() == numDB)
+                {
+                    return i.getMC_position();
+                }
+            }
+            return null;
+        }
+        public List<double[]> getDTD_position(int numMC, int numDTD, int numDB)
+        {
+            foreach (ChiPhi i in chi_phi)
+            {
+                if (i.getSL_MC() == numMC && i.getSL_DTD() == numDTD && i.getSL_DB() == numDB)
+                {
+                    return i.getDTD_position();
+                }
+            }
+            return null;
+        }
+        public List<double[]> getDB_position(int numMC, int numDTD, int numDB)
+        {
+            foreach (ChiPhi i in chi_phi)
+            {
+                if (i.getSL_MC() == numMC && i.getSL_DTD() == numDTD && i.getSL_DB() == numDB)
+                {
+                    return i.getDB_position();
+                }
+            }
+            return null;
+        }
+    }
+}

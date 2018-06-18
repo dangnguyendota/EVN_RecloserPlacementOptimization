@@ -329,7 +329,7 @@ namespace EVN_test1
             {
                 F_best += s.sumF2();
             }
-            while (soMC < MaxMC)
+            for(int nMC = 0; nMC<MaxMC; nMC++)
             {
                 List<double> temp = new List<double>();
                 List<int> viTriDatTrongCay = new List<int>();
@@ -375,8 +375,6 @@ namespace EVN_test1
                 }
                 set[viTriCay[vitri]].setLastMC(viTriDatTrongCay[vitri]);
                 set[viTriCay[vitri]].refresh();
-                soMC -= 1;
-
             }
             while (soDTD > 0)
             {
