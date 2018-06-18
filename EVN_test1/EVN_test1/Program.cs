@@ -8,6 +8,82 @@ namespace EVN_test1
 {
     class Program
     {
+        static List<List<string>> Read(string path)
+        {
+            List<List<string>> result = new List<List<string>>();
+            List<string> vtMC = new List<string>();
+            List<string> vtDTD = new List<string>();
+            List<string> vtDB = new List<string>();
+            List<string> input = new List<string>();
+            using (StreamReader ip = new StreamReader(path))
+            {
+                string line;
+
+                while ((line = ip.ReadLine()) != null)
+                {
+                    input.Add(line.Trim());
+                }
+            }
+            foreach(string i in input)
+            {
+                Console.WriteLine(i);
+            }
+            string mc = "";
+            string dtd = "";
+            string db = "";
+            int flag = 0;
+            bool r = false;
+            foreach(char i in input[0])
+            {
+                if(i == ']')
+                {
+                    r = false;
+                } else if(i == '[')
+                {
+                    flag += 1;
+                    r = true;
+                }
+                else if(r == true)
+                {
+                    if(flag == 1)
+                    {
+                        mc += i;
+                    }else if(flag == 2)
+                    {
+                        dtd += i;
+                    }else if(flag == 3)
+                    {
+                        db += i;
+                    }
+                }
+            }
+            vtMC = Split(mc);
+            vtDTD = Split(dtd);
+            vtDB = Split(db);
+            result.Add(vtMC);
+            result.Add(vtDTD);
+            result.Add(vtDB);
+            return result;
+        }
+        static List<string> Split(string list)
+        {
+            List<string> result = new List<string>();
+            list = list.Replace("\",\"", "\"");
+            string current = "";
+            foreach(char i in list)
+            {
+                if(i == '\"' && current != "")
+                {
+                    result.Add(current.Trim());
+                    current = "";
+                }
+                else if (i != '\"')
+                {
+                    current += i;
+                }
+            }
+            return result ;
+        }
         static void Main(string[] args)
         {
 
@@ -100,22 +176,40 @@ namespace EVN_test1
             selected_name.Add(names[3]);
             selected_name.Add(names[10]);
             ///////////////////////////////////////////////////////////////////////
-            ViTriDat v = new ViTriDat(LCdatas.gMaDoiTuong(selected_name), LCdatas.gMaLienKet(selected_name), LCdatas.gToaDoDaiDien(selected_name), LCdatas.gSoThuTu(selected_name), LCdatas.gSoHieu(selected_name), LCdatas.gLoCapDien(selected_name), 10, 30, 40);
+            ViTriDat v = new ViTriDat(LCdatas.gMaDoiTuong(selected_name), LCdatas.gMaLienKet(selected_name), LCdatas.gToaDoDaiDien(selected_name), LCdatas.gSoThuTu(selected_name), LCdatas.gSoHieu(selected_name), LCdatas.gLoCapDien(selected_name));
+            v.TimViTriThietBi(5, 5, 5); // Tim vi tri cac thiet bi trong cac lo cap dien da duoc chon 
+            Console.WriteLine("F : "+v.F_tong().ToString()); // v.F_tong() lay F nho nhat
+            //////////////////Tinh F cua nhung thiet bi nguoi dung dat vao////////////////////////////////
+            List<List<string>> vtThietBi = Read("E:\\C#project\\EVN_code\\EVN_RecloserPlacementOptimization\\EVN_test1\\EVN_test1\\bin\\Debug\\Input.txt");
+            List<string> vtMC = vtThietBi[0];
+            List<string> vtDTD = vtThietBi[1];
+            List<string> vtDB = vtThietBi[2];
+            Console.WriteLine("F nguoi dung nhap vao: " + v.getF(vtMC, vtDTD, vtDB).ToString());
+            
+            /////////////////////////////////////////////////////////////////
             Console.WriteLine("Run complete!");
             List<string> may_cat = v.layViTriDat(TYPE_OBJECT.MAY_CAT);
             List<string> dao_tu_dong = v.layViTriDat(TYPE_OBJECT.DAO_TU_DONG);
             List<string> den_bao = v.layViTriDat(TYPE_OBJECT.DEN_BAO);
+            Console.WriteLine("MC:");
             foreach (string i in may_cat)
             {
-                Console.WriteLine("May cat:" + i);
+                //Console.WriteLine("May cat:" + i);
+                Console.Write("\""+i + "\",");
             }
+            Console.WriteLine();
+            Console.WriteLine("DB :");
             foreach (string i in den_bao)
             {
-                Console.WriteLine("Den bao:" + i);
+                //Console.WriteLine("Den bao:" + i);
+                Console.Write("\"" + i + "\",");
             }
+            Console.WriteLine();
+            Console.WriteLine("DTD :");
             foreach (string i in dao_tu_dong)
             {
-                Console.WriteLine("Dao Tu Dong:" + i);
+                //Console.WriteLine("Dao Tu Dong:" + i);
+                Console.Write("\"" + i + "\",");
             }
         }
     }

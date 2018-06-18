@@ -14,7 +14,7 @@ namespace EVN_test1
         List<string> soThuTu;
         List<string> soHieu;
         List<string> loCapDien;
-        private const double maxDistance = 500;//500 mét
+        private double maxDistance = Setting.maxDistance;//500 mét
         public List<bool> daXet = new List<bool>();
         public List<bool> loi = new List<bool>();
         public List<List<int>> cotLienKet = new List<List<int>>();

@@ -46,6 +46,8 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SearchPosition.cs" />
+    <Compile Include="Setting.cs" />
+    <Compile Include="SoLuongThietBiDat.cs" />
     <Compile Include="TimCotLanCan.cs" />
     <Compile Include="ToaDo.cs" />
     <Compile Include="ViTriDat.cs" />

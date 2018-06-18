@@ -20,12 +20,12 @@ namespace EVN_test1
         private List<bool> last_db = new List<bool>();
         public List<bool> dtd = new List<bool>();
         private List<bool> last_dtd = new List<bool>();
-        public const int Ce = 1000;
-        public const double Tr = (double)1 / 30;
-        public const int Cr = 10000000;
-        public const int Cs = 1000000;
-        public const double vanToc = 5000;
-        public const double tieuHao = 100; //cong suat tieu thu
+        public int Ce = Setting.Ce;
+        public double Tr = Setting.Tr;
+        public int Cr = Setting.Cr;
+        public int Cs = Setting.Cs;
+        public double vanToc = Setting.vanToc;
+        public double tieuHao = Setting.tieuHao; //cong suat tieu thu
         public SearchPosition(List<int> parent, List<double> d, List<double> w, List<int> l)
         {
             this.parent = parent;
@@ -409,6 +409,26 @@ namespace EVN_test1
                 this.db.Add(this.last_db[i]);
                 this.dtd.Add(this.last_dtd[i]);
             }
+        }
+        public void reset()
+        {
+            mc.Clear();
+            last_mc.Clear();
+            db.Clear();
+            last_db.Clear();
+            dtd.Clear();
+            last_dtd.Clear();
+            for (int i = 0; i < numNode; i++)
+            {
+                mc.Add(false);
+                last_mc.Add(false);
+                db.Add(false);
+                last_db.Add(false);
+                dtd.Add(false);
+                last_dtd.Add(false);
+            }
+            mc[0] = true;
+            last_mc[0] = true;
         }
     }
 }
