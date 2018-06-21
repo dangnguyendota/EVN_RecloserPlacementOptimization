@@ -5,16 +5,16 @@ using System.Text;
 
 namespace EVN_test1
 {
-    class ChiPhi
+    public class ChiPhi
     {
         private int numMC = 0;
         private int numDTD = 0;
         private int numDB = 0;
         private double F = 0.0;
-        private List<double[]> vi_triMC ;
-        private List<double[]> vi_triDTD ;
-        private List<double[]> vi_triDB ;
-        public ChiPhi(int numMC, int numDTD, int numDB, double F, List<double[]> vi_triMC, List<double[]> vi_triDTD, List<double[]> vi_triDB)
+        private List<int[]> vi_triMC ;
+        private List<int[]> vi_triDTD ;
+        private List<int[]> vi_triDB ;
+        public ChiPhi(int numMC, int numDTD, int numDB, double F, List<int[]> vi_triMC, List<int[]> vi_triDTD, List<int[]> vi_triDB)
         {
             this.numMC = numMC;
             this.numDTD = numDTD;
@@ -44,27 +44,27 @@ namespace EVN_test1
         {
             return this.numDB;
         }
-        //public void setMC_positions(List<double[]> vitri)
+        //public void setMC_positions(List<int[]> vitri)
         //{
         //    vi_triMC = vitri;
         //}
-        //public void setDTD_position(List<double[]> vitri)
+        //public void setDTD_position(List<int[]> vitri)
         //{
         //    vi_triDTD = vitri;
         //}
-        //public void setDB_postion(List<double[]> vitri)
+        //public void setDB_postion(List<int[]> vitri)
         //{
         //    vi_triDB = vitri;
         //}
-        public List<double[]> getMC_position()
+        public List<int[]> getMC_position()
         {
             return this.vi_triMC;
         }
-        public List<double[]> getDTD_position()
+        public List<int[]> getDTD_position()
         {
             return this.vi_triDTD;
         }
-        public List<double[]> getDB_position()
+        public List<int[]> getDB_position()
         {
             return this.vi_triDB;
         }
@@ -73,7 +73,7 @@ namespace EVN_test1
     public class TieuHao
     {
         private List<ChiPhi> chi_phi = new List<ChiPhi>();
-        public void Add(int numMC, int numDTD, int numDB, double F, List<double[]> vi_triMC, List<double[]> vi_triDTD, List<double[]> vi_triDB)
+        public void Add(int numMC, int numDTD, int numDB, double F, List<int[]> vi_triMC, List<int[]> vi_triDTD, List<int[]> vi_triDB)
         {
             foreach(ChiPhi i in chi_phi)
             {
@@ -95,7 +95,7 @@ namespace EVN_test1
             }
             return 0.0;
         }
-        public List<double[]> getMC_position(int numMC, int numDTD, int numDB)
+        public List<int[]> getMC_position(int numMC, int numDTD, int numDB)
         {
             foreach (ChiPhi i in chi_phi)
             {
@@ -104,9 +104,9 @@ namespace EVN_test1
                     return i.getMC_position();
                 }
             }
-            return null;
+            return new List<int[]>();
         }
-        public List<double[]> getDTD_position(int numMC, int numDTD, int numDB)
+        public List<int[]> getDTD_position(int numMC, int numDTD, int numDB)
         {
             foreach (ChiPhi i in chi_phi)
             {
@@ -117,7 +117,7 @@ namespace EVN_test1
             }
             return null;
         }
-        public List<double[]> getDB_position(int numMC, int numDTD, int numDB)
+        public List<int[]> getDB_position(int numMC, int numDTD, int numDB)
         {
             foreach (ChiPhi i in chi_phi)
             {
@@ -127,6 +127,14 @@ namespace EVN_test1
                 }
             }
             return null;
+        }
+        public int currentLength()
+        {
+            return this.chi_phi.Count;
+        }
+        public ChiPhi getAt(int index)
+        {
+            return this.chi_phi[index];
         }
     }
 }

@@ -171,13 +171,13 @@ namespace EVN_test1
             LoCapDien LCdatas = new LoCapDien(maDoiTuong, maLienKet, toaDoDaiDien, soThuTu, soHieu, loCapDien);
             List<string> names = LCdatas.getLCDnames(); // Tra ve danh sach cac ten Lo Cap Dien.
             List<string> selected_name = new List<string>(); // Cac lo cap dien duoc chon
-            selected_name.Add(names[0]); // chon lo cap vi tri 0
-            selected_name.Add(names[2]); // chon lo cap vi tri 1
-            selected_name.Add(names[3]);
-            selected_name.Add(names[10]);
+            for(int i = 0; i<40; i++)
+            {
+                selected_name.Add(names[i]);
+            }
             ///////////////////////////////////////////////////////////////////////
             ViTriDat v = new ViTriDat(LCdatas.gMaDoiTuong(selected_name), LCdatas.gMaLienKet(selected_name), LCdatas.gToaDoDaiDien(selected_name), LCdatas.gSoThuTu(selected_name), LCdatas.gSoHieu(selected_name), LCdatas.gLoCapDien(selected_name));
-            v.TimViTriThietBi(5, 5, 5); // Tim vi tri cac thiet bi trong cac lo cap dien da duoc chon 
+            v.TimViTriThietBi(0, 0, 0); // Tim vi tri cac thiet bi trong cac lo cap dien da duoc chon 
             Console.WriteLine("F : "+v.F_tong().ToString()); // v.F_tong() lay F nho nhat
             //////////////////Tinh F cua nhung thiet bi nguoi dung dat vao////////////////////////////////
             List<List<string>> vtThietBi = Read("E:\\C#project\\EVN_code\\EVN_RecloserPlacementOptimization\\EVN_test1\\EVN_test1\\bin\\Debug\\Input.txt");
@@ -185,6 +185,11 @@ namespace EVN_test1
             List<string> vtDTD = vtThietBi[1];
             List<string> vtDB = vtThietBi[2];
             Console.WriteLine("F nguoi dung nhap vao: " + v.getF(vtMC, vtDTD, vtDB).ToString());
+            ChiPhi cp = v.TimSoLuongThietBi(Setting.cpDT, Setting.Pr, Setting.Ps, Setting.Pf);
+            Console.WriteLine("Chi phi nho nhat: " + cp.getF().ToString()+
+                ", Voi so luong MC:"+cp.getSL_MC().ToString()+
+                ",DTD :"+cp.getSL_DTD().ToString()+
+                ",DB :"+cp.getSL_DB().ToString());
             
             /////////////////////////////////////////////////////////////////
             Console.WriteLine("Run complete!");

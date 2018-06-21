@@ -50,6 +50,7 @@ namespace EVN_test1
             }
             
         }
+        //linh cmn tinh
         private int countOf(List<int> parent, int i)
         {
             int count = 0;
@@ -123,13 +124,165 @@ namespace EVN_test1
             }
             return pos;
         }
-        public void TimViTriThietBi(int sMC, int sDTD, int sDB)
+        public double F_tong()
         {
-            List<SearchPosition> set = this.search;
-            foreach(SearchPosition s in set)
+            return this.current_F;
+        }
+        private List<int[]> Clone(List<int[]> List_vt, int[] vt)
+        {
+            List<int[]> result = new List<int[]>();
+            foreach(int[] i in List_vt)
+            {
+                result.Add(i);
+            }
+            result.Add(vt);
+            return result;
+        }
+        private void resetTree()
+        {
+            foreach(SearchPosition s in this.search)
             {
                 s.reset();
             }
+        }
+        // get
+        public double getF(List<string> viTriMC, List<string> viTriDTD, List<string> viTriDB)
+        {
+            for (int i = 0; i < search.Count; i++)
+            {
+                search[i].reset();
+            }
+            for (int i = 0; i < parent.Count; i++)
+            {
+                for (int j = 1; j < parent[i].Count; j++)
+                {
+                    if (j < c.cay_maCot[i].Count)
+                    {
+                        foreach (string vt in viTriMC)
+                        {
+                            if (c.cay_maCot[i][j].IndexOf(vt) >= 1)
+                            {
+                                search[i].setLastMC(j);
+                                search[i].refresh();
+                                break;
+                            }
+                        }
+                        foreach (string vt in viTriDTD)
+                        {
+                            if (c.cay_maCot[i][j].IndexOf(vt) >= 1)
+                            {
+                                search[i].setLastDTD(j);
+                                search[i].refresh();
+                                break;
+                            }
+                        }
+                        foreach (string vt in viTriDB)
+                        {
+                            if (c.cay_maCot[i][j].IndexOf(vt) >= 1)
+                            {
+                                search[i].setLastDB(j);
+                                search[i].refresh();
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            double result = 0.0;
+            foreach (SearchPosition s in search)
+            {
+                result += s.sumF2();
+            }
+            return result;
+        }
+        public List<string> layViTriDat(TYPE_OBJECT type)
+        {
+            if (type == TYPE_OBJECT.MAY_CAT)
+            {
+                return this.tapMC;
+            }
+            else if (type == TYPE_OBJECT.DAO_TU_DONG)
+            {
+                return this.tapDTD;
+            }
+            else
+            {
+                return this.tapDB;
+            }
+        }
+        public List<double[]> layToaDoDat(TYPE_OBJECT type)
+        {
+            if (type == TYPE_OBJECT.MAY_CAT)
+            {
+                return this.tapMC_toaDo;
+            }
+            else if (type == TYPE_OBJECT.DAO_TU_DONG)
+            {
+                return this.tapDTD_toaDo;
+            }
+            else
+            {
+                return this.tapDB_toaDo;
+            }
+        }
+        public List<List<string>> getVT(List<int[]> vtMC, List<int[]> vtDTD, List<int[]> vtDB)
+        {
+            this.resetTree();
+            List<String> tapMC_result = new List<string>();
+            //tapMC_toaDo.Clear();
+            List<String> tapDTD_result = new List<string>();
+            //tapDTD_toaDo.Clear();
+            List<String> tapDB_result = new List<string>();
+            //tapDB_toaDo.Clear();
+            List<List<String>> result = new List<List<string>>();
+            foreach(int[] i in vtMC)
+            {
+                this.search[i[0]].setLastMC(i[1]);
+                this.search[i[0]].refresh();
+            }
+            foreach(int[] i in vtDTD)
+            {
+                this.search[i[0]].setLastDTD(i[1]);
+                this.search[i[0]].refresh();
+            }
+            foreach (int[] i in vtDB)
+            {
+                this.search[i[0]].setLastDB(i[1]);
+                this.search[i[0]].refresh();
+            }
+            for (int i = 0; i < parent.Count; i++)
+            {
+                for (int j = 1; j < parent[i].Count; j++)
+                {
+                    if (search[i].mc[j])
+                    {
+                        tapMC_result.Add(c.cay_maCot[i][j][1]);
+                        //tapMC_toaDo.Add(c.cay_toaDo[i][j][1]);
+                    }
+                    else if (search[i].dtd[j])
+                    {
+                        tapDTD_result.Add(c.cay_maCot[i][j][1]);
+                        //tapDTD_toaDo.Add(c.cay_toaDo[i][j][1]);
+                    }
+                    else if (search[i].db[j])
+                    {
+                        tapDB_result.Add(c.cay_maCot[i][j][1]);
+                        //tapDB_toaDo.Add(c.cay_toaDo[i][j][1]);
+                    }
+                }
+            }
+            result.Add(tapMC_result);
+            result.Add(tapDTD_result);
+            result.Add(tapDB_result);
+            this.resetTree();
+            return result;
+            
+        }
+        // Ham chinh
+        public void TimViTriThietBi(int sMC, int sDTD, int sDB)
+        {
+            this.resetTree();
+            List<SearchPosition> set = this.search;
             int dem = sDB;
             int soMC = sMC;
             int soDTD = sDTD;
@@ -311,25 +464,33 @@ namespace EVN_test1
                 }
             }
         }
-        public void TimSoLuongThietBi(double chiPhiDauTu)
+        public ChiPhi TimSoLuongThietBi(double chiPhiDauTu, double Pr, double Ps, double Pf)
         {
+            // reset lai cay search
+            this.resetTree();
             List<SearchPosition> set = this.search;
-            foreach (SearchPosition s in set)
-            {
-                s.reset();
-            }
             int soMC = 0;
             int soDTD = 0;
             int soDB = 0;
             double F_tong = Double.MaxValue;
-            int MaxMC = Convert.ToInt32(chiPhiDauTu / Setting.Pr);
-            double F_best = 0.0;
+            int MaxMC = (int)(chiPhiDauTu / Pr);
+            double F_best = double.MaxValue;
+            double F_underbound = 0.0;
+            double F_last = 0.0;
+            int best_pos = 0;
             // set F_best = tong chi phi hien tai.
-            foreach(SearchPosition s in set)
+            foreach (SearchPosition s in set)
             {
                 F_best += s.sumF2();
             }
-            for(int nMC = 0; nMC<MaxMC; nMC++)
+            // Tieu hao luu tat cac cac F(N1, N2, N3) 
+            TieuHao F = new TieuHao();
+            // vtMC, vtDTD, vtDB luu vi tri tam thoi cua cac thiet bi
+            List<int[]> vtMC = new List<int[]>();
+            List<int[]> vtDTD = new List<int[]>();
+            List<int[]> vtDB = new List<int[]>();
+            // Tim F(N1, 0, 0); 1 <= N1 <= N1_max
+            for (int nMC = 1; nMC <= MaxMC; nMC++)
             {
                 List<double> temp = new List<double>();
                 List<int> viTriDatTrongCay = new List<int>();
@@ -373,218 +534,189 @@ namespace EVN_test1
                 {
                     F_tong = temp[vitri];
                 }
+                // set lai vi tri DTD trong cay
                 set[viTriCay[vitri]].setLastMC(viTriDatTrongCay[vitri]);
                 set[viTriCay[vitri]].refresh();
-            }
-            while (soDTD > 0)
-            {
-                List<double> temp = new List<double>();
-                List<int> viTriDatTrongCay = new List<int>();
-                List<int> viTriCay = new List<int>();
-                for (int j = 0; j < set.Count; j++)
+                // Cap nhat F_best;
+                if (F_tong < F_best)
                 {
-                    SearchPosition a = set[j];
-                    double tong = 0;
-                    for (int k = 0; k < set.Count; k++)
-                    {
-                        if (k != j)
-                        {
-                            tong += set[k].sumF1();
-                        }
-                    }
-                    for (int i = 0; i < a.numNode; i++)
-                    {
-                        if (!a.getMC(i) && !a.getDTD(i) && a.currentM(i) < 4)
-                        {
-                            if (a.l[i] != 0 || a.d[i] != 0 || a.w[i] != 0)
-                            {
-                                a.setDTD(i);
-                                temp.Add(a.sumF1() + tong);
-                                viTriCay.Add(j);
-                                viTriDatTrongCay.Add(i);
-                                a.refresh();
-                            }
-                        }
-                    }
+                    F_best = F_tong;
+                    best_pos = F.currentLength();
                 }
-                int vitri = findMinPos(temp);
-                if (vitri == -1)
-                {
-                    break;
-                }
-                if (temp[vitri] > F_tong)
-                {
-                    break;
-                }
-                else
-                {
-                    F_tong = temp[vitri];
-                }
-                set[viTriCay[vitri]].setLastDTD(viTriDatTrongCay[vitri]);
-                set[viTriCay[vitri]].refresh();
-                soDTD -= 1;
+                Console.WriteLine(F_best.ToString() + "," + F_tong.ToString() + "," + F_underbound.ToString() + "," + nMC.ToString() + ",0, 0");
+                // Them F(N1, 0, 0) vao N1 =1...N1_max; 
+                F.Add(nMC, 0, 0, F_tong, Clone(vtMC, new int[] { viTriCay[vitri], viTriDatTrongCay[vitri] }), vtDTD, vtDB);
+                vtMC.Add(new int[] { viTriCay[vitri], viTriDatTrongCay[vitri] }); // Them vao vtMC 
 
             }
-            while (soDB > 0)
+            for (int nMC = 1; nMC <= MaxMC; nMC++)
             {
-                List<double> temp = new List<double>();
-                List<int> viTriDatTrongCay = new List<int>();
-                List<int> viTriCay = new List<int>();
-                for (int j = 0; j < set.Count; j++)
+                // voi moi N1, N2 = 1...N2_max, N2_max = (chiPhiDauTu - so MC * Pr)/Ps;
+                int MaxDTD = (int)((chiPhiDauTu - nMC * Pr) / Ps);
+                vtMC = F.getMC_position(nMC, 0, 0); // Lay vi tri cac may cat cua truong hop F(nMC, 0, 0)
+                // Neu khong tim duoc vtMC , ket thuc vong lap
+                if (vtMC.Count == 0)
                 {
-                    SearchPosition a = set[j];
-                    double tong = 0;
-                    for (int k = 0; k < set.Count; k++)
+                    break;
+                }
+                F_tong = F.getF(nMC, 0, 0);
+                for (int nDTD = 1; nDTD <= MaxDTD; nDTD++)
+                {
+                    List<double> temp = new List<double>();
+                    List<int> viTriDatTrongCay = new List<int>();
+                    List<int> viTriCay = new List<int>();
+                    for (int j = 0; j < set.Count; j++)
                     {
-                        if (k != j)
+                        SearchPosition a = set[j];
+                        double tong = 0;
+                        for (int k = 0; k < set.Count; k++)
                         {
-                            tong += set[k].sumF2();
+                            if (k != j)
+                            {
+                                tong += set[k].sumF1();
+                            }
+                        }
+                        for (int i = 0; i < a.numNode; i++)
+                        {
+                            if (!a.getMC(i) && !a.getDTD(i) && a.currentM(i) < 4)
+                            {
+                                if (a.l[i] != 0 || a.d[i] != 0 || a.w[i] != 0)
+                                {
+                                    a.setDTD(i);
+                                    temp.Add(a.sumF1() + tong);
+                                    viTriCay.Add(j);
+                                    viTriDatTrongCay.Add(i);
+                                    a.refresh();
+                                }
+                            }
                         }
                     }
-                    for (int i = 0; i < a.numNode; i++)
+                    int vitri = findMinPos(temp);
+                    if (vitri == -1)
                     {
-                        if (a.l[i] != 0 || a.d[i] != 0 || a.w[i] != 0)
+                        break;
+                    }
+                    if (temp[vitri] > F_tong)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        F_last = F_tong; // F(nMC, nDTD-1,0)
+                        F_tong = temp[vitri]; // F(nMC, nDTD, 0)
+                    }
+                    // set lai vi tri DTD trong cay
+                    set[viTriCay[vitri]].setLastDTD(viTriDatTrongCay[vitri]);
+                    set[viTriCay[vitri]].refresh();
+                    // Neu F_underbound > F_best thi ket thuc // SUA
+                    F_underbound = F_tong - (F_last - F_tong) * (MaxDTD - nDTD); // F_underbound = F(N1, x, 0) - (F(N1, x-1, 0) - F(N1, x, 0)) *(N2 - x) 
+                    if (F_underbound > F_best)
+                    {
+                        Console.WriteLine("Cut");
+                        break;
+                    }
+                    Console.WriteLine(F_best.ToString() + "," + F_tong.ToString() + "," + F_underbound.ToString() + "," + nMC.ToString() +","+ nDTD.ToString()+", 0");
+                    if (F_tong < F_best)
+                    {
+                        F_best = F_tong;
+                        best_pos = F.currentLength();
+                    }
+                    // Them F(N1, N2, 0) vao N2 =1...N2_max; 
+                    F.Add(nMC, nDTD, 0, F_tong, vtMC, Clone(vtDTD, new int[] { viTriCay[vitri], viTriDatTrongCay[vitri] }), vtDB);
+                    vtDTD.Add(new int[] { viTriCay[vitri], viTriDatTrongCay[vitri] }); // them best hien tai vao vtDTD
+                }
+            }
+            for (int nMC = 1; nMC <= MaxMC; nMC++)
+            {
+                // voi moi N1, N2 = 1...N2_max, N2_max = (chiPhiDauTu - so MC * Pr)/Ps;
+                int MaxDTD = (int)((chiPhiDauTu - nMC * Pr) / Ps);
+                vtMC = F.getMC_position(nMC, 0, 0); // Lay vi tri cac may cat cua truong hop F(nMC, 0, 0)
+                // Neu khong tim duoc vtMC , ket thuc vong lap
+                if (vtMC.Count == 0)
+                {
+                    break;
+                }
+                for (int nDTD = 1; nDTD <= MaxDTD; nDTD++)
+                {
+                    // so den bao toi da N3_max;
+                    int MaxDB = (int)((chiPhiDauTu - nMC * Pr - nDTD * Ps) / Pf);
+                    vtDTD = F.getDTD_position(nMC, nDTD, 0);
+                    if (vtDTD.Count == 0)
+                    {
+                        break;
+                    }
+                    F_tong = F.getF(nMC, nDTD, 0);
+                    for (int nDB = 1; nDB <= MaxDB; nDB++)
+                    {
+                        List<double> temp = new List<double>();
+                        List<int> viTriDatTrongCay = new List<int>();
+                        List<int> viTriCay = new List<int>();
+                        for (int j = 0; j < set.Count; j++)
                         {
-                            if (!a.getMC(i) && !a.getDTD(i) && !a.getDB(i))
+                            SearchPosition a = set[j];
+                            double tong = 0;
+                            for (int k = 0; k < set.Count; k++)
                             {
+                                if (k != j)
+                                {
+                                    tong += set[k].sumF2();
+                                }
+                            }
+                            for (int i = 0; i < a.numNode; i++)
+                            {
+                                if (a.l[i] != 0 || a.d[i] != 0 || a.w[i] != 0)
+                                {
+                                    if (!a.getMC(i) && !a.getDTD(i) && !a.getDB(i))
+                                    {
 
-                                a.setDB(i);
-                                temp.Add(a.sumF2() + tong);
-                                viTriCay.Add(j);
-                                viTriDatTrongCay.Add(i);
-                                a.refresh();
+                                        a.setDB(i);
+                                        temp.Add(a.sumF2() + tong);
+                                        viTriCay.Add(j);
+                                        viTriDatTrongCay.Add(i);
+                                        a.refresh();
+                                    }
+                                }
                             }
                         }
-                    }
-                }
-                int vitri = findMinPos(temp);
-                if (vitri == -1)
-                {
-                    break;
-                }
-                if (temp[vitri] > F_tong)
-                {
-                    break;
-                }
-                else
-                {
-                    F_tong = temp[vitri];
-                }
-                set[viTriCay[vitri]].setLastDB(viTriDatTrongCay[vitri]);
-                set[viTriCay[vitri]].refresh();
-                soDB -= 1;
-            }
-            this.current_F = F_tong;
-            tapMC.Clear();
-            tapMC_toaDo.Clear();
-            tapDTD.Clear();
-            tapDTD_toaDo.Clear();
-            tapDB.Clear();
-            tapDB_toaDo.Clear();
-            for (int i = 0; i < parent.Count; i++)
-            {
-                for (int j = 1; j < parent[i].Count; j++)
-                {
-                    if (search[i].mc[j])
-                    {
-                        tapMC.Add(c.cay_maCot[i][j][1]);
-                        tapMC_toaDo.Add(c.cay_toaDo[i][j][1]);
-                    }
-                    else if (search[i].dtd[j])
-                    {
-                        tapDTD.Add(c.cay_maCot[i][j][1]);
-                        tapDTD_toaDo.Add(c.cay_toaDo[i][j][1]);
-                    }
-                    else if (search[i].db[j])
-                    {
-                        tapDB.Add(c.cay_maCot[i][j][1]);
-                        tapDB_toaDo.Add(c.cay_toaDo[i][j][1]);
-                    }
-                }
-            }
-        }
-        public double getF(List<string> viTriMC, List<string> viTriDTD, List<string> viTriDB)
-        {
-            for(int i = 0; i< search.Count; i++)
-            {
-                search[i].reset();
-            }
-            for (int i = 0; i < parent.Count; i++)
-            {
-                for(int j =1; j<parent[i].Count; j++)
-                {
-                    if (j < c.cay_maCot[i].Count)
-                    {
-                        foreach (string vt in viTriMC)
+                        int vitri = findMinPos(temp);
+                        if (vitri == -1)
                         {
-                            if (c.cay_maCot[i][j].IndexOf(vt) >= 1)
-                            {
-                                search[i].setLastMC(j);
-                                search[i].refresh();
-                                break;
-                            }
+                            break;
                         }
-                        foreach (string vt in viTriDTD)
+                        if (temp[vitri] > F_tong)
                         {
-                            if (c.cay_maCot[i][j].IndexOf(vt) >= 1)
-                            {
-                                search[i].setLastDTD(j);
-                                search[i].refresh();
-                                break;
-                            }
+                            break;
                         }
-                        foreach (string vt in viTriDB)
+                        else
                         {
-                            if (c.cay_maCot[i][j].IndexOf(vt) >= 1)
-                            {
-                                search[i].setLastDB(j);
-                                search[i].refresh();
-                                break;
-                            }
+                            F_last = F_tong;
+                            F_tong = temp[vitri];
                         }
+                        //cap nhat
+                        set[viTriCay[vitri]].setLastDB(viTriDatTrongCay[vitri]);
+                        set[viTriCay[vitri]].refresh();
+                        // F_underbound
+                        F_underbound = F_tong - (F_last - F_tong) * (MaxDB - nDB);
+                        if(F_underbound > F_best)
+                        {
+                            Console.WriteLine("Cut");
+                            break;
+                        }
+                        Console.WriteLine(F_best.ToString() + "," + F_tong.ToString() + ","+ F_underbound.ToString()+"," + nMC.ToString() + "," + nDTD.ToString() + ","+nDB.ToString());
+                        if (F_tong < F_best)
+                        {
+                            F_best = F_tong;
+                            best_pos = F.currentLength();
+                        }
+
+                        // Them F(N1, N2, 0) vao N2 =1...N2_max; 
+                        F.Add(nMC, nDTD, nDB, F_tong, vtMC, vtDTD, Clone(vtDB, new int[] { viTriCay[vitri], viTriDatTrongCay[vitri] }));
+                        vtDB.Add(new int[] { viTriCay[vitri], viTriDatTrongCay[vitri] }); // them best hien tai vao vDB
                     }
                 }
+
             }
-            double result = 0.0;
-            foreach(SearchPosition s in search)
-            {
-                result += s.sumF2();
-            }
-            return result;
-        }
-        public double F_tong()
-        {
-            return this.current_F;
-        }
-        public List<string> layViTriDat(TYPE_OBJECT type)
-        {
-            if (type == TYPE_OBJECT.MAY_CAT)
-            {
-                return this.tapMC;
-            }
-            else if (type == TYPE_OBJECT.DAO_TU_DONG)
-            {
-                return this.tapDTD;
-            }
-            else
-            {
-                return this.tapDB;
-            }
-        }
-        public List<double[]> layToaDoDat(TYPE_OBJECT type)
-        {
-            if (type == TYPE_OBJECT.MAY_CAT)
-            {
-                return this.tapMC_toaDo;
-            }
-            else if (type == TYPE_OBJECT.DAO_TU_DONG)
-            {
-                return this.tapDTD_toaDo;
-            }
-            else
-            {
-                return this.tapDB_toaDo;
-            }
+            return F.getAt(best_pos);
         }
     }
 }

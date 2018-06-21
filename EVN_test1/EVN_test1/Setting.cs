@@ -17,5 +17,6 @@ namespace EVN_test1
         public const double Pr = 210000000;//gia 1 recloser 180 - 210 trieu
         public const double Ps = 120000000;// gia 1 dao tu dong 100 - 120 trieu
         public const double Pf = 12000000; // gia 1 den bao 10 - 12 trieu
+        public const double cpDT = 1000000000;
     }
 }
